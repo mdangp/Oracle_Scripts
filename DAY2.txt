@@ -1,0 +1,41 @@
+1) Create a pl sql block for following condiration
+   if basic salary is above 5000 then DA 130%, HRA 30%, TA 10%
+   if basic salary less than equal 5000 DA 120%, HRA 50%, TA 5%
+DECLARE
+	v_No NUMBER;
+	v_Bs NUMBER(18, 6);
+	v_DA NUMBER(18, 6);
+	v_HRA NUMBER(18, 6);
+	v_TA NUMBER(18, 6);
+	v_GS NUMBER(18, 6);
+	t_DA NUMBER(18, 6);
+	t_HRA NUMBER(18, 6);
+	t_TA NUMBER(18, 6);
+	t_GS NUMBER(18, 6);
+BEGIN 
+	v_No := &v_No;
+	SELECT BASICSAL, TA, DA, HRA, GS INTO v_Bs, t_TA, t_DA, t_HRA, t_GS FROM SALS WHERE EMPID = v_No;
+	IF(v_Bs > 5000) THEN
+		v_DA := v_Bs * 1.3;
+		v_HRA := v_Bs * 0.3;
+		v_TA := v_Bs * 0.1;
+		v_GS := (v_DA + t_DA) + (v_HRA + t_HRA) + (v_TA + t_TA) + v_Bs;
+		UPDATE SALS SET 
+			TA = (v_TA + t_TA),
+			DA = (v_DA + t_DA),
+			HRA = (v_HRA + t_HRA),
+			GS = v_GS
+		WHERE EMPID = v_No;
+	ELSIF(v_Bs <= 5000) THEN
+		v_DA := v_Bs * 1.2;
+		v_HRA := v_Bs * 0.5;
+		v_TA := v_Bs * 0.05;
+		v_GS := (v_DA + t_DA) + (v_HRA + t_HRA) + (v_TA + t_TA) + v_Bs;
+		UPDATE SALS SET 
+			TA = (v_TA + t_TA),
+			DA = (v_DA + t_DA),
+			HRA = (v_HRA + t_HRA),
+			GS = v_GS
+		WHERE EMPID = v_No;
+	END IF;
+END

@@ -1,0 +1,113 @@
+CREATE TABLE SQANDCUBE
+(
+	No NUMBER,
+	Squre NUMBER,
+	Cube Number
+)
+
+1) Write a PL SQL block that will accept input value from user and show squre and cube of value and insert into table.
+
+DECLARE
+	v_No NUMBER;
+	v_Squre NUMBER; 
+	v_Cube NUMBER;
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Input the number');
+	v_No := &v_No;
+	v_Squre := v_No * v_No;
+	v_Cube := v_Squre * v_No;
+	
+	INSERT INTO SQANDCUBE VALUES(v_No, v_Squre, v_Cube);
+	DBMS_OUTPUT.PUT_LINE('NO =  '||v_No||' Squre =  '||v_Squre||' Cube =  '||v_Cube);
+	DBMS_OUTPUT.PUT_LINE('Successfully Enter Data Into Table');
+END;
+
+Above question add 1 to 10000 nubers squre and cube using loop;
+
+DECLARE
+	v_No NUMBER;
+	v_Squre NUMBER; 
+	v_Cube NUMBER;
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Input the number');
+	v_No := &v_No;
+	LOOP
+		v_Squre := v_No * v_No;
+		v_Cube := v_Squre * v_No;
+		
+		INSERT INTO SQANDCUBE VALUES(v_No, v_Squre, v_Cube);
+		DBMS_OUTPUT.PUT_LINE('NO =  '||v_No||' Squre =  '||v_Squre||' Cube =  '||v_Cube);
+		DBMS_OUTPUT.PUT_LINE('Successfully Enter Data Into Table');
+		v_No := v_No + 1;
+		IF(v_No > 10000) THEN
+			EXIT;
+		END IF;
+	END LOOP;
+END;
+/**************************************************************************************************************/
+
+CREATE TABLE to insert employees salary with empID, BS, TA, DA, HRA, and GrossSalary and insert into table;
+DA 120% of BS, HRA 50%, TA 5%;
+CREATE TABLE SALS
+(
+	EmpID NUMBER PRIMARY KEY NOT NULL,
+	BasicSal NUMBER(18, 6),
+	TA NUMBER(18, 6),
+	DA NUMBER(18, 6),
+	HRA NUMBER(18, 6),
+	GS NUMBER(18, 6)
+)
+
+DECLARE
+	v_EmpID NUMBER;
+	v_BasicSal NUMBER(18, 6);
+	v_TA NUMBER(18, 6);
+	v_DA NUMBER(18, 6);
+	v_HRA NUMBER(18, 6);
+	v_GS NUMBER(18, 6);
+BEGIN
+	v_EmpID := &v_EmpID;
+	v_BasicSal := &v_BasicSal;
+	v_TA := v_BasicSal * 0.05;
+	v_DA := v_BasicSal * 1.2;
+	v_HRA := v_BasicSal * 0.5;
+	v_GS := v_BasicSal + v_TA + v_DA + v_HRA;
+	
+	INSERT INTO SALS VALUES(v_EmpID, v_BasicSal, v_TA, v_DA, v_HRA, v_GS);
+	DBMS_OUTPUT.PUT_LINE('EmpID = '||v_EmpID||'BasicSal = '|| v_BasicSal||'TA = '|| v_TA||'DA = '||v_DA||'HRA = '|| v_HRA||'GS = ' ||v_GS);
+END
+
+/***************************************************************************************************/
+
+Find Out Missing employee No from table
+CREATE TABLE EMP(EmpNo NUMBER, Name VARCHAR2(30))
+INSERT INTO EMP VALUES(1, 'A');
+INSERT INTO EMP VALUES(10, 'B');
+INSERT INTO EMP VALUES(12, 'c');
+INSERT INTO EMP VALUES(15, 'd');
+INSERT INTO EMP VALUES(18, 'E');
+INSERT INTO EMP VALUES(22, 'F');
+INSERT INTO EMP VALUES(23, 'G');
+INSERT INTO EMP VALUES(24, 'H');
+INSERT INTO EMP VALUES(25, 'I');
+INSERT INTO EMP VALUES(51, 'J');
+
+Result : 
+2 to 9
+11, 13, 14, 16, 17, 19, 20, 21, 26 to 50
+
+DECLARE 
+	intMaxID NUMBER;
+	intMinID NUMBER;
+	intCount NUMBER;
+BEGIN
+	SELECT MIN(EmpNo) INTO intMinID FROM EMP;
+	SELECT MAX(EmpNo) INTO intMaxID FROM EMP;
+	FOR cnt in intMinID..intMaxID 
+	LOOP
+		SELECT COUNT(*) INTO intCount FROM EMP WHERE EmpNo = cnt;
+		IF(intCount = 0) THEN
+			DBMS_OUTPUT.PUT_LINE('Missing Employee Number = '||cnt);
+		END IF;
+	END LOOP;		
+END

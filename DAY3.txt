@@ -1,0 +1,64 @@
+1) Create if else ladder to display division of tnputed percent;
+ DECLARE
+	v_cent NUMBER(18, 6);
+	v_div VARCHAR2(100);
+ BEGIN
+	v_cent := &v_cent;
+	
+	IF(v_cent >= 60) THEN
+		v_div := 'First Class Division';
+	ELSIF(v_cent BETWEEN 45 AND 60) THEN
+		v_div := 'Second Class Division';
+	ELSIF(v_cent BETWEEN 35 AND 45) THEN
+		v_div := 'Third Class Division';
+	ELSE	
+		v_div := 'Failed';
+	END IF;
+	DBMS_OUTPUT.PUT_LINE('Status Of Student is '||v_div);
+ END
+ 
+ /*****************************************************************************************/
+ 2) COnsider a table library with following columns
+	StudID, IssueDate, ReturnDate, fine
+	
+	Book has been issued on following condition within 10 days no fine from 11 to 15 days 1 rs per day
+	16 to 20 days 2rs per day, 21 to 30 days 5 rs per day and after 30 days membership cancel;
+	
+	CREATE TABLE LIBRARY(StudID NUMBER PRIMARY KEY NOT NULL, IssueDate Date, ReturnDate Date, fine NUMBER(18, 6))
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(100, '01-Jan-2014', '9-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(101, '13-Jan-2014', '26-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(102, '10-Jan-2014', '13-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(103, '12-Jan-2014', '25-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(104, '10-Jan-2014', '27-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(105, '01-Jan-2014', '25-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(106, '05-Jan-2014', '24-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(107, '12-Jan-2014', '25-Jan-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(108, '01-Jan-2014', '03-Feb-2014');
+	INSERT INTO LIBRARY (StudID, IssueDate, ReturnDate) VALUES(109, '12-Jan-2014', '13-Feb-2014');
+	
+	
+	DECLARE
+		v_studid NUMBER;
+		v_issuedate date;
+		v_returndate date;
+		v_diff NUMBER;
+		v_fine VARCHAR2(50);
+	BEGIN
+		v_studid := &v_studid;
+		SELECT IssueDate, ReturnDate INTO v_issuedate, v_returndate FROM LIBRARY WHERE StudID =  v_studid;
+		v_diff := v_returndate - v_issuedate;
+		DBMS_OUTPUT.PUT_LINE('Diffrence is = '||v_diff);
+		IF(v_diff <= 10) THEN
+			v_fine := '0';
+		ELSIF(v_diff BETWEEN 11 AND 15) THEN
+			v_fine := v_diff * 1;	
+		ELSIF(v_diff BETWEEN 16 AND 20) THEN
+			v_fine := v_diff * 2;
+		ELSIF(v_diff BETWEEN 21 AND 30) THEN
+			v_fine := v_diff * 5;
+		ELSIF(v_diff > 30) THEN
+			v_fine := 'Cancel Membership';
+		END IF;
+		UPDATE LIBRARY SET Fine = v_fine WHERE StudID = v_studid;
+	END
+	
